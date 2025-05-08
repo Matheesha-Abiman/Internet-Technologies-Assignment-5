@@ -4,7 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Portfolio</title>
+    <link rel="icon" href="/media/images/new_icon.png" />
+    <title>Matheesha Abiman</title>
     <style>
 
     </style>
@@ -17,11 +18,23 @@
     <link rel="stylesheet" href="/css/services.css">
     <link rel="stylesheet" href="/css/projects.css">
     <link rel="stylesheet" href="/css/contact.css">
+    <link rel="stylesheet" href="/css/animation.css">
     <link rel="stylesheet" href="/index.css">
 </head>
 
 <body>
     <main>
+        <div class="circle"></div>
+        <div class="circle"></div>
+        <div class="circle"></div>
+        <div class="circle"></div>
+        <div class="circle"></div>
+        <div class="circle"></div>
+        <div class="circle"></div>
+        <div class="circle"></div>
+        <div class="circle"></div>
+        <div class="circle"></div>
+
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
             <div class="container-fluid">
                 <a class="navbar-brand" href="index.html"> <img src="/media/images/my1.png" height="50px" width="50px"
@@ -497,6 +510,84 @@
                         item.classList.add("active");
                     }
                 });
+            });
+        });
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const coords = { x: 0, y: 0 };
+            const circles = document.querySelectorAll(".circle");
+            let animationId;
+
+            // Customizable settings
+            const settings = {
+                dotWidth: 24,       // Base dot width in pixels
+                trailLength: 0.3,   // Trail effect strength (0-1)
+                scaleFactor: 0.8,   // Scale reduction per dot
+                opacityFactor: 0.7, // Opacity reduction per dot
+                maxDots: 4         // Maximum number of dots
+            };
+
+            // Initialize circle positions with width settings
+            circles.forEach(function (circle, index) {
+                const scale = 1 - (index * (1 - settings.scaleFactor) / settings.maxDots);
+                circle.x = 0;
+                circle.y = 0;
+                circle.style.width = `${settings.dotWidth * scale}px`;
+                circle.style.height = `${settings.dotWidth * scale}px`;
+                circle.style.opacity = 1 - (index * (1 - settings.opacityFactor) / settings.maxDots);
+                circle.style.transform = `scale(${scale})`;
+            });
+
+            window.addEventListener("mousemove", function (e) {
+                coords.x = e.clientX;
+                coords.y = e.clientY;
+
+                if (!animationId) {
+                    animateCircles();
+                }
+            });
+
+            function animateCircles() {
+                let x = coords.x;
+                let y = coords.y;
+
+                circles.forEach(function (circle, index) {
+                    // Calculate dynamic width based on speed (optional)
+                    const speed = Math.sqrt(
+                        Math.pow(x - circle.x, 2) +
+                        Math.pow(y - circle.y, 2)
+                    );
+                    const dynamicWidth = Math.min(
+                        settings.dotWidth,
+                        settings.dotWidth * (1 + speed * 0.01)
+                    );
+
+                    // Apply position and size
+                    circle.style.left = `${x - dynamicWidth / 2}px`;
+                    circle.style.top = `${y - dynamicWidth / 2}px`;
+                    circle.style.width = `${dynamicWidth}px`;
+                    circle.style.height = `${dynamicWidth}px`;
+
+                    // Store current position
+                    circle.x = x;
+                    circle.y = y;
+
+                    // Calculate next position
+                    const nextCircle = circles[index + 1] || circles[0];
+                    x += (nextCircle.x - x) * settings.trailLength;
+                    y += (nextCircle.y - y) * settings.trailLength;
+                });
+
+                animationId = requestAnimationFrame(animateCircles);
+            }
+
+            // Handle window resize
+            window.addEventListener('resize', function () {
+                if (animationId) {
+                    cancelAnimationFrame(animationId);
+                    animationId = null;
+                }
             });
         });
     </script>

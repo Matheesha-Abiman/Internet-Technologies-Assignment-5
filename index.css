@@ -2,6 +2,7 @@ body {
     background-color:#091828; 
     color: white;
     padding-top: 70px;
+    cursor: none !important;
 }
 
 .content {
